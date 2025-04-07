@@ -1,6 +1,6 @@
 [
     {
-      "path": "src/game/assets/images/",
+      "path": "/assets/images/",
       "files": [
         {
           "type": "spritesheet",

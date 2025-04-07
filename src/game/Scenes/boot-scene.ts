@@ -7,7 +7,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.json('animations_json', 'src/game/assets/data/animations.json');
+    this.load.json('animations_json', '/assets/data/animations.json');
   }
 
   create() {
