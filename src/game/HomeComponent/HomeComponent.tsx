@@ -1,12 +1,14 @@
 import { GameScene } from "../Scenes/game-scene";
 import { BootScene } from "../Scenes/boot-scene";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { PreloadScene } from "../Scenes/preload-scene";
 
 const Home = () => {
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
   const gameRef = useRef<Phaser.Game | null>(null);
 
   const startGame = () => {
+    setGameStarted(true);
     if (!gameRef.current) {
       gameRef.current = new Phaser.Game({
         type: Phaser.CANVAS,
@@ -14,17 +16,17 @@ const Home = () => {
         pixelArt: true,
         scale: {
           parent: "game-container",
-          width: 450,
-          height: 640,
+          width: 650,
+          height: "100%",
           autoCenter: Phaser.Scale.CENTER_BOTH,
           mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
         },
-        backgroundColor: "#0000FF",
+        backgroundColor: "transparent",
         physics: {
           default: "arcade",
           arcade: {
             gravity: { y: 0, x: 0 },
-            debug: true,
+            debug: false,
           },
         },
       });
@@ -40,14 +42,19 @@ const Home = () => {
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;
+        setGameStarted(false);
       }
     };
   };
 
   return (
-    <div>
-      {!gameRef.current && <button onClick={startGame}>Start</button>}
-      {gameRef.current && <div id="game-container" />}
+    <div className="w-full h-full flex justify-center items-center">
+      {!gameStarted && (
+        <button onClick={startGame} className="text-[#fff]">
+          Start
+        </button>
+      )}
+      {gameStarted && <div id="game-container"></div>}
     </div>
   );
 };

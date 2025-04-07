@@ -4,6 +4,7 @@ import Phaser from "phaser";
 import { KeyboardInputComponent } from "../input/KeyboardInputComponent";
 import { HorizontalMovementComponent } from "../movement/HorizontalMovementComponent";
 import * as config from "../Config"
+import { VerticalMovementComponent } from "../movement/VerticalMovementComponent";
 
 export class Player extends Phaser.GameObjects.Container {
   #horizontalMovementComponent;
@@ -21,8 +22,8 @@ export class Player extends Phaser.GameObjects.Container {
     (this.body as any).setCollideWorldBounds(true);
     this.setDepth(2);
 
-    this.#penguinSprite = scene.add.sprite(0, -8, "penguin");
-    this.#penguinFireFeetSprite = scene.add.sprite(1, 0, "penguin_fire_feet");
+    this.#penguinSprite = scene.add.sprite(0, -18, "penguin");
+    this.#penguinFireFeetSprite = scene.add.sprite(0, 0, "penguin_fire_feet");
     this.#penguinFireFeetSprite.play("penguin_fire_feet");
     this.add([this.#penguinFireFeetSprite, this.#penguinSprite]);
 
@@ -39,7 +40,7 @@ export class Player extends Phaser.GameObjects.Container {
   }
 
   update(ts: any, dt: any) {
-    console.log(ts, dt);
+    // console.log(ts, dt);
     this.#keyboardInputCompoinent.update();
     this.#horizontalMovementComponent.update();
   }
