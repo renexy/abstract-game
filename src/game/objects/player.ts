@@ -3,10 +3,12 @@
 import Phaser from "phaser";
 import { KeyboardInputComponent } from "../input/KeyboardInputComponent";
 import { HorizontalMovementComponent } from "../movement/HorizontalMovementComponent";
-import * as config from "../Config"
+import * as config from "../Config";
+import { WeaponComponent } from "../weapon/WeaponComponent";
 
 export class Player extends Phaser.GameObjects.Container {
   #horizontalMovementComponent;
+  #weaponComponent;
   #keyboardInputCompoinent;
   #penguinSprite;
   #penguinFireFeetSprite;
@@ -27,7 +29,22 @@ export class Player extends Phaser.GameObjects.Container {
     this.add([this.#penguinFireFeetSprite, this.#penguinSprite]);
 
     this.#keyboardInputCompoinent = new KeyboardInputComponent(this.scene);
-    this.#horizontalMovementComponent = new HorizontalMovementComponent(this, this.#keyboardInputCompoinent, config.PLAYER_MOVEMENT_HORIZONTAL_VELOCITY);
+    this.#horizontalMovementComponent = new HorizontalMovementComponent(
+      this,
+      this.#keyboardInputCompoinent,
+      config.PLAYER_MOVEMENT_HORIZONTAL_VELOCITY
+    );
+    this.#weaponComponent = new WeaponComponent(
+      this,
+      this.#keyboardInputCompoinent,
+      { 
+        speed: config.PLAYER_BULLET_SPEED,
+        lifespan: config.PLAYER_BULLET_LIFESPAN,
+        flipY: false,
+        interval: config.PLAYER_BULLET_INTERVAL,
+        maxCount: config.PLAYER_BULLET_MAX_COUNT, yOffset: -20 }
+    );
+
     this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     this.once(
       Phaser.GameObjects.Events.DESTROY,
@@ -42,5 +59,6 @@ export class Player extends Phaser.GameObjects.Container {
     console.log(ts, dt);
     this.#keyboardInputCompoinent.update();
     this.#horizontalMovementComponent.update();
+    this.#weaponComponent.update(dt);
   }
 }

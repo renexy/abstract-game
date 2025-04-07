@@ -1,5 +1,11 @@
 [
   {
+    "key": "bullet",
+    "frameRate": 12,
+    "repeat": -1,
+    "assetKey": "bullet"
+  },
+  {
     "key": "penguin_fire_feet",
     "frameRate": 12,
     "repeat": -1,

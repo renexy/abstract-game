@@ -1,10 +1,12 @@
 import { VerticalMovementComponent } from "../../movement/VerticalMovementComponent";
 import * as config from "../../Config";
 import { BotFighterInputComponent } from "../../input/BotFighterInputComponent";
+import { WeaponComponent } from "../../weapon/WeaponComponent";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export class FighterEnemy extends Phaser.GameObjects.Container {
   #inputComponent;
+  #weaponComponent;
   #abstractSprite;
   #verticalMovementComponent;
   #penguinFireFeetSprite;
@@ -31,6 +33,15 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
       config.ENEMY_FIGHTER_MOVEMENT_VERTICAL_VELOCITY
     );
 
+    this.#weaponComponent = new WeaponComponent(this, this.#inputComponent, {
+      speed: config.ENEMY_FIGHTER_BULLET_SPEED,
+      lifespan: config.ENEMY_FIGHTER_BULLET_LIFESPAN,
+      flipY: true,
+      interval: config.ENEMY_FIGHTER_BULLET_INTERVAL,
+      maxCount: config.ENEMY_FIGHTER_BULLET_MAX_COUNT,
+      yOffset: 10,
+    });
+
     this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     this.once(
       Phaser.GameObjects.Events.DESTROY,
@@ -45,5 +56,6 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
     console.log(ts, dt);
     this.#inputComponent.update();
     this.#verticalMovementComponent.update();
+    this.#weaponComponent.update(dt);
   }
 }

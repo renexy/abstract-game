@@ -25,6 +25,12 @@
           "key": "fighter",
           "url": "fighter.png",
           "frameConfig": { "frameWidth": 48, "frameHeight": 48 }
+        },
+        {
+          "type": "spritesheet",
+          "key": "bullet",
+          "url": "bullet.png",
+          "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
         }
       ]
     }
