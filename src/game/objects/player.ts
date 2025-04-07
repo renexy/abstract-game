@@ -4,7 +4,6 @@ import Phaser from "phaser";
 import { KeyboardInputComponent } from "../input/KeyboardInputComponent";
 import { HorizontalMovementComponent } from "../movement/HorizontalMovementComponent";
 import * as config from "../Config"
-import { VerticalMovementComponent } from "../movement/VerticalMovementComponent";
 
 export class Player extends Phaser.GameObjects.Container {
   #horizontalMovementComponent;
@@ -40,7 +39,7 @@ export class Player extends Phaser.GameObjects.Container {
   }
 
   update(ts: any, dt: any) {
-    // console.log(ts, dt);
+    console.log(ts, dt);
     this.#keyboardInputCompoinent.update();
     this.#horizontalMovementComponent.update();
   }

@@ -50,6 +50,7 @@ export class AbstractEnemy extends Phaser.GameObjects.Container {
   }
 
   update(ts: any, dt: any) {
+    console.log(ts, dt);
     this.#inputComponent.update();
     this.#verticalMovementComponent.update();
     this.#horizontalMovementComponent.update();

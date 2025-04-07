@@ -1,4 +1,3 @@
-import { AbstractEnemyInputComponent } from "../../input/BotAbstractInputComponent";
 import { VerticalMovementComponent } from "../../movement/VerticalMovementComponent";
 import * as config from "../../Config";
 import { BotFighterInputComponent } from "../../input/BotFighterInputComponent";
@@ -43,6 +42,7 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
   }
 
   update(ts: any, dt: any) {
+    console.log(ts, dt);
     this.#inputComponent.update();
     this.#verticalMovementComponent.update();
   }
