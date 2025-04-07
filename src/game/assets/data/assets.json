@@ -1,0 +1,20 @@
+[
+    {
+      "path": "src/game/assets/images/",
+      "files": [
+        {
+          "type": "spritesheet",
+          "key": "penguin",
+          "url": "penguin.png",
+          "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+        },
+        {
+          "type": "spritesheet",
+          "key": "penguin_fire_feet",
+          "url": "penguin_fire_feet.png",
+          "frameConfig": { "frameWidth": 48, "frameHeight": 48 }
+        }
+      ]
+    }
+  ]
+  
