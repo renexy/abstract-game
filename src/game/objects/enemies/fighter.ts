@@ -2,9 +2,13 @@ import { VerticalMovementComponent } from "../../movement/VerticalMovementCompon
 import * as config from "../../Config";
 import { BotFighterInputComponent } from "../../input/BotFighterInputComponent";
 import { WeaponComponent } from "../../weapon/WeaponComponent";
+import { HealthComponent } from "../../health/HealthComponent";
+import { ColliderComponent } from "../../collider/ColliderComponent";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export class FighterEnemy extends Phaser.GameObjects.Container {
+  #healthComponent;
+  #colliderComponent;
   #inputComponent;
   #weaponComponent;
   #abstractSprite;
@@ -42,6 +46,9 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
       yOffset: 10,
     });
 
+    this.#healthComponent = new HealthComponent(config.ENEMY_FIGHTER_HEALTH);
+    this.#colliderComponent = new ColliderComponent(this.#healthComponent);
+
     this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     this.once(
       Phaser.GameObjects.Events.DESTROY,
@@ -52,8 +59,30 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
     );
   }
 
+  get colliderComponent() {
+    return this.#colliderComponent;
+  }
+
+  get healthComponent() {
+    return this.#healthComponent;
+  }
+
+  get weaponObjectGroup() {
+    return this.#weaponComponent.bulletGroup;
+  }
+
+  get weaponComponent() {
+    return this.#weaponComponent;
+  }
+
   update(ts: any, dt: any) {
-    console.log(ts, dt);
+    if (!this.active) {
+      return;
+    }
+    if (this.#healthComponent.isDead) {
+      this.setActive(false);
+      this.setVisible(false);
+    }
     this.#inputComponent.update();
     this.#verticalMovementComponent.update();
     this.#weaponComponent.update(dt);

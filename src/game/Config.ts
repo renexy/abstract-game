@@ -1,13 +1,20 @@
+export const PLAYER_HEALTH = 4;
+
+
+
 export const PLAYER_MOVEMENT_HORIZONTAL_VELOCITY = 20;
 export const PLAYER_BULLET_MAX_COUNT = 10;
 export const PLAYER_BULLET_INTERVAL = 300;
 export const PLAYER_BULLET_SPEED = 300;
 export const PLAYER_BULLET_LIFESPAN = 3;
 
+
+export const ENEMY_ABSTRACT_HEALTH = 2;
 export const ENEMY_ABSTRACT_MOVEMENT_MAX_X = 80;
 export const ENEMY_ABSTRACT_MOVEMENT_VERTICAL_VELOCITY = 10;
-export const ENEMY_ABSTRACT_MOVEMENT_HORIZONTAL_VELOCITY = 9
-;
+export const ENEMY_ABSTRACT_MOVEMENT_HORIZONTAL_VELOCITY = 9;
+
+export const ENEMY_FIGHTER_HEALTH = 2;
 export const ENEMY_FIGHTER_MOVEMENT_VERTICAL_VELOCITY = 12;
 export const ENEMY_FIGHTER_BULLET_MAX_COUNT = 10;
 // change this to make fighter shoot faster (difficulty setting)

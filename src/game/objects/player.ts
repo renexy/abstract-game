@@ -5,8 +5,12 @@ import { KeyboardInputComponent } from "../input/KeyboardInputComponent";
 import { HorizontalMovementComponent } from "../movement/HorizontalMovementComponent";
 import * as config from "../Config";
 import { WeaponComponent } from "../weapon/WeaponComponent";
+import { HealthComponent } from "../health/HealthComponent";
+import { ColliderComponent } from "../collider/ColliderComponent";
 
 export class Player extends Phaser.GameObjects.Container {
+  #healthComponent;
+  #colliderComponent;
   #horizontalMovementComponent;
   #weaponComponent;
   #keyboardInputCompoinent;
@@ -37,13 +41,18 @@ export class Player extends Phaser.GameObjects.Container {
     this.#weaponComponent = new WeaponComponent(
       this,
       this.#keyboardInputCompoinent,
-      { 
+      {
         speed: config.PLAYER_BULLET_SPEED,
         lifespan: config.PLAYER_BULLET_LIFESPAN,
         flipY: false,
         interval: config.PLAYER_BULLET_INTERVAL,
-        maxCount: config.PLAYER_BULLET_MAX_COUNT, yOffset: -20 }
+        maxCount: config.PLAYER_BULLET_MAX_COUNT,
+        yOffset: -20,
+      }
     );
+
+    this.#healthComponent = new HealthComponent(config.PLAYER_HEALTH);
+    this.#colliderComponent = new ColliderComponent(this.#healthComponent);
 
     this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     this.once(
@@ -55,10 +64,45 @@ export class Player extends Phaser.GameObjects.Container {
     );
   }
 
+  get healthComponent() {
+    return this.#healthComponent;
+  }
+
+  get colliderComponent() {
+    return this.#colliderComponent;
+  }
+
+  get weaponObjectGroup() {
+    return this.#weaponComponent.bulletGroup;
+  }
+
+  get weaponComponent() {
+    return this.#weaponComponent;
+  }
+
   update(ts: any, dt: any) {
-    console.log(ts, dt);
+    if (!this.active) {
+      return;
+    }
+    if (this.#healthComponent.isDead) {
+      this.#hide();
+      this.setVisible(true);
+      this.#penguinSprite.play({
+        key: "explosion",
+      });
+      return;
+    }
+
+    this.#penguinSprite.setFrame((config.PLAYER_HEALTH - this.#healthComponent.life).toString(10));
     this.#keyboardInputCompoinent.update();
     this.#horizontalMovementComponent.update();
     this.#weaponComponent.update(dt);
+  }
+
+  #hide() {
+    this.setActive(false);
+    this.setVisible(false);
+    this.#penguinFireFeetSprite.setVisible(false);
+    this.#keyboardInputCompoinent.lockInput = true;
   }
 }

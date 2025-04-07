@@ -79,4 +79,8 @@ export class WeaponComponent {
       }
     });
   }
+
+  destroyBullet(bullet: any) {
+    bullet.setState(0);
+  }
 }

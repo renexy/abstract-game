@@ -10,6 +10,12 @@
     "frameRate": 12,
     "repeat": -1,
     "assetKey": "penguin_fire_feet"
+  },
+  {
+    "key": "explosion",
+    "frameRate": 12,
+    "repeat": 0,
+    "assetKey": "explosion"
   }
   ]
   
