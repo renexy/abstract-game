@@ -81,6 +81,7 @@ export class Player extends Phaser.GameObjects.Container {
   }
 
   update(ts: any, dt: any) {
+    console.log(ts);
     if (!this.active) {
       return;
     }

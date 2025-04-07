@@ -5,7 +5,6 @@ import Phaser from "phaser";
 import { Player } from "../objects/player";
 // import { AbstractEnemy } from "../objects/enemies/abstract";
 import { FighterEnemy } from "../objects/enemies/fighter";
-import { AbstractEnemy } from "../objects/enemies/abstract";
 export class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: "GameScene" });
