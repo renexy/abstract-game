@@ -104,13 +104,12 @@ export class GameScene extends Phaser.Scene {
       }
     );
 
-    new Score(this, eventBusComponent);
+    const x = new Score(this, eventBusComponent);
     new LivesComponent(this, eventBusComponent);
 
     // Listen for game over event and emit it to the game instance
     eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
-      console.log('Game over event received in GameScene');
-      this.game.events.emit('gameOver');
+      this.game.events.emit('gameOver', x);
     });
   }
 }

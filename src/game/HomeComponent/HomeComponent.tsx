@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GameScene } from "../Scenes/game-scene";
 import { BootScene } from "../Scenes/boot-scene";
 import { useRef, useState } from "react";
@@ -5,9 +6,13 @@ import { PreloadScene } from "../Scenes/preload-scene";
 import { useLoginWithAbstract } from "@abstract-foundation/agw-react";
 import { useAccount } from "wagmi";
 import { CircularProgress } from "@mui/material";
+import Scoreboard from "../../components/Scoreboard";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [updateHighScore, setUpdateHighScore] = useState<string>("");
+  const [showScoreboard, setShowScoreboard] = useState<boolean>(false);
   const gameRef = useRef<Phaser.Game | null>(null);
   const { address, isConnected, isConnecting } = useAccount();
   const { login } = useLoginWithAbstract();
@@ -19,6 +24,7 @@ const Home = () => {
       gameRef.current = null;
     }
 
+    setUpdateHighScore("");
     setGameStarted(true);
     gameRef.current = new Phaser.Game({
       type: Phaser.CANVAS,
@@ -47,12 +53,14 @@ const Home = () => {
     gameRef.current.scene.start("BootScene");
 
     // Listen for game over event
-    gameRef.current.events.on('gameOver', () => {
-      console.log('Game over event received in HomeComponent');
+    gameRef.current.events.on("gameOver", (data: any) => {
+      console.log("Game over event received in HomeComponent", data);
       setGameStarted(false);
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;
+        setUpdateHighScore(data.text);
+        setShowScoreboard(true);
       }
     });
   };
@@ -88,6 +96,18 @@ const Home = () => {
     );
   }
 
+  if (showScoreboard) {
+    return (
+      <Scoreboard
+        updateHighScore={updateHighScore}
+        goBack={() => {
+          setUpdateHighScore("");
+          setShowScoreboard(false);
+        }}
+      />
+    );
+  }
+
   return (
     <>
       {gameStarted && <div id="game-container"></div>}
@@ -102,12 +122,21 @@ const Home = () => {
                 ? "text-[#4A5659]"
                 : "text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
             }
-            onClick={startGame}
+            onClick={() => {
+              if (!isConnected) {
+                toast.error("Please connect wallet!");
+              } else {
+                startGame();
+              }
+            }}
           >
             {gameRef.current ? "Play Again" : "Start Game"}
           </span>
           {getWalletInfo()}
-          <span className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300">
+          <span
+            onClick={() => setShowScoreboard(true)}
+            className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
+          >
             Leaderboard
           </span>
           <span className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300">

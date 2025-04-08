@@ -28,4 +28,8 @@ export class Score extends Phaser.GameObjects.Text {
       this.setText(this.#score.toString(10));
     });
   }
+
+  get score() {
+    return this.#score
+  }
 }
