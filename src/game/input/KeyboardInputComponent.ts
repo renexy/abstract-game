@@ -13,12 +13,11 @@ export class KeyboardInputComponent extends InputComponent {
   }
 
   set lockInput(val: any) {
-    this.#inputLocked = val;
     console.log(this.#inputLocked);
+    this.#inputLocked = val;
   }
 
   update() {
-
     this._up = this.#cursorKeys.up.isDown;
     this._down = this.#cursorKeys.down.isDown;
     this._left = this.#cursorKeys.left.isDown;

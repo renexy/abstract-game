@@ -13,43 +13,48 @@ const Home = () => {
   const { login } = useLoginWithAbstract();
 
   const startGame = () => {
-    setGameStarted(true);
-    if (!gameRef.current) {
-      gameRef.current = new Phaser.Game({
-        type: Phaser.CANVAS,
-        roundPixels: true,
-        pixelArt: true,
-        scale: {
-          parent: "game-container",
-          width: 650,
-          height: "100%",
-          autoCenter: Phaser.Scale.CENTER_BOTH,
-          mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
-        },
-        backgroundColor: "transparent",
-        physics: {
-          default: "arcade",
-          arcade: {
-            gravity: { y: 0, x: 0 },
-            debug: false,
-          },
-        },
-      });
-
-      gameRef.current.scene.add("BootScene", BootScene);
-      gameRef.current.scene.add("PreloadScene", PreloadScene);
-      gameRef.current.scene.add("GameScene", GameScene);
-      gameRef.current.scene.start("BootScene");
+    // If there's an existing game, destroy it first
+    if (gameRef.current) {
+      gameRef.current.destroy(true);
+      gameRef.current = null;
     }
 
-    // Cleanup on unmount
-    return () => {
+    setGameStarted(true);
+    gameRef.current = new Phaser.Game({
+      type: Phaser.CANVAS,
+      roundPixels: true,
+      pixelArt: true,
+      scale: {
+        parent: "game-container",
+        width: 360,
+        height: 640,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
+      },
+      backgroundColor: "transparent",
+      physics: {
+        default: "arcade",
+        arcade: {
+          gravity: { y: 0, x: 0 },
+          debug: false,
+        },
+      },
+    });
+
+    gameRef.current.scene.add("BootScene", BootScene);
+    gameRef.current.scene.add("PreloadScene", PreloadScene);
+    gameRef.current.scene.add("GameScene", GameScene);
+    gameRef.current.scene.start("BootScene");
+
+    // Listen for game over event
+    gameRef.current.events.on('gameOver', () => {
+      console.log('Game over event received in HomeComponent');
+      setGameStarted(false);
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;
-        setGameStarted(false);
       }
-    };
+    });
   };
 
   const getWalletInfo = () => {
@@ -99,7 +104,7 @@ const Home = () => {
             }
             onClick={startGame}
           >
-            Start Game
+            {gameRef.current ? "Play Again" : "Start Game"}
           </span>
           {getWalletInfo()}
           <span className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300">

@@ -7,6 +7,7 @@ import * as config from "../Config";
 import { WeaponComponent } from "../weapon/WeaponComponent";
 import { HealthComponent } from "../health/HealthComponent";
 import { ColliderComponent } from "../collider/ColliderComponent";
+import { CUSTOM_EVENTS } from "../events/EventBusComponent";
 
 export class Player extends Phaser.GameObjects.Container {
   #healthComponent;
@@ -14,12 +15,13 @@ export class Player extends Phaser.GameObjects.Container {
   #horizontalMovementComponent;
   #weaponComponent;
   #keyboardInputCompoinent;
+  #eventBusComponent;
   #penguinSprite;
   #penguinFireFeetSprite;
 
-  constructor(scene: any) {
+  constructor(scene: any, eventBusComponent: any) {
     super(scene, scene.scale.width / 2, scene.scale.height - 32, []);
-
+    this.#eventBusComponent = eventBusComponent;
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
     (this.body as any).setSize(24, 24);
@@ -54,6 +56,10 @@ export class Player extends Phaser.GameObjects.Container {
     this.#healthComponent = new HealthComponent(config.PLAYER_HEALTH);
     this.#colliderComponent = new ColliderComponent(this.#healthComponent);
 
+    this.#hide();
+
+    this.#eventBusComponent.on(CUSTOM_EVENTS.PLAYER_SPAWN, this.#spawn, this);
+
     this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     this.once(
       Phaser.GameObjects.Events.DESTROY,
@@ -62,6 +68,8 @@ export class Player extends Phaser.GameObjects.Container {
       },
       this
     );
+
+    this.#keyboardInputCompoinent.lockInput = false;
   }
 
   get healthComponent() {
@@ -80,8 +88,7 @@ export class Player extends Phaser.GameObjects.Container {
     return this.#weaponComponent;
   }
 
-  update(ts: any, dt: any) {
-    console.log(ts);
+  update(_ts: any, dt: any) {
     if (!this.active) {
       return;
     }
@@ -91,10 +98,13 @@ export class Player extends Phaser.GameObjects.Container {
       this.#penguinSprite.play({
         key: "explosion",
       });
+      this.#eventBusComponent.emit(CUSTOM_EVENTS.PLAYER_DESTROYED);
       return;
     }
-
-    this.#penguinSprite.setFrame((config.PLAYER_HEALTH - this.#healthComponent.life).toString(10));
+    this.#keyboardInputCompoinent.lockInput = false;
+    this.#penguinSprite.setFrame(
+      (config.PLAYER_HEALTH - this.#healthComponent.life).toString(10)
+    );
     this.#keyboardInputCompoinent.update();
     this.#horizontalMovementComponent.update();
     this.#weaponComponent.update(dt);
@@ -105,5 +115,15 @@ export class Player extends Phaser.GameObjects.Container {
     this.setVisible(false);
     this.#penguinFireFeetSprite.setVisible(false);
     this.#keyboardInputCompoinent.lockInput = true;
+  }
+
+  #spawn() {
+    this.setActive(true);
+    this.setVisible(true);
+    this.#penguinFireFeetSprite.setVisible(true);
+    this.#penguinSprite.setTexture("penguin", 0);
+    this.#healthComponent.reset();
+    this.setPosition(this.scene.scale.width / 2, this.scene.scale.height - 32);
+    this.#keyboardInputCompoinent.lockInput = false;
   }
 }

@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { CUSTOM_EVENTS } from "../events/EventBusComponent";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export class EnemySpawnerComponent {
   #scene;
   #spawnInterval;
   #spawnAt;
   #group;
+  #disableSpawning;
 
   constructor(
     scene: any,
@@ -25,6 +29,7 @@ export class EnemySpawnerComponent {
 
     this.#spawnInterval = spawnConfig.interval;
     this.#spawnAt = spawnConfig.spawnAt;
+    this.#disableSpawning = false;
 
     this.#scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     this.#scene.physics.world.on(
@@ -32,18 +37,33 @@ export class EnemySpawnerComponent {
       this.worldStep,
       this
     );
-    this.#scene.events.once(
-      Phaser.Scenes.Events.DESTROY,
-      () => {
+
+    // Clean up event listeners when scene is destroyed
+    this.#scene.events.once(Phaser.Scenes.Events.DESTROY, () => {
+      this.cleanup();
+    });
+
+    eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
+      this.#disableSpawning = true;
+      this.cleanup();
+    });
+  }
+
+  cleanup() {
+    try {
+      if (this.#scene && this.#scene.events) {
         this.#scene.events.off(Phaser.Scenes.Events.UPDATE, this.update, this);
+      }
+      if (this.#scene && this.#scene.physics && this.#scene.physics.world) {
         this.#scene.physics.world.off(
           Phaser.Physics.Arcade.Events.WORLD_STEP,
           this.worldStep,
           this
         );
-      },
-      this
-    );
+      }
+    } catch (error) {
+      console.log('Cleanup error:', error);
+    }
   }
 
   get phaserGroup() {
@@ -51,6 +71,8 @@ export class EnemySpawnerComponent {
   }
 
   update(_ts: any, dt: any) {
+    if (this.#disableSpawning) return;
+
     this.#spawnAt -= dt;
     if (this.#spawnAt > 0) {
       return;
@@ -63,6 +85,8 @@ export class EnemySpawnerComponent {
   }
 
   worldStep(_delta: any) {
+    if (this.#disableSpawning) return;
+
     this.#group.getChildren().forEach((enemy: any) => {
       if (!enemy.active) return;
 

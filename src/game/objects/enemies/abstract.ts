@@ -53,6 +53,14 @@ export class AbstractEnemy extends Phaser.GameObjects.Container {
     return this.#colliderComponent;
   }
 
+  get shipAssetKey() {
+    return "abstract";
+  }
+
+  get shipDestroyedAnimationKey() {
+    return "explosion";
+  }
+
   init(eventBusComponent: any) {
     this.#eventBusComponent = eventBusComponent;
     this.#inputComponent = new AbstractEnemyInputComponent(this);
@@ -91,6 +99,7 @@ export class AbstractEnemy extends Phaser.GameObjects.Container {
     if (this.#healthComponent.isDead) {
       this.setActive(false);
       this.setVisible(false);
+      this.#eventBusComponent.emit(CUSTOM_EVENTS.ENEMY_DESTROYED, this);
     }
     this.#inputComponent.update();
     this.#verticalMovementComponent.update();
