@@ -24,7 +24,7 @@ export class Score extends Phaser.GameObjects.Text {
     this.setOrigin(0.5);
 
     this.#eventBusComponent.on(CUSTOM_EVENTS.ENEMY_DESTROYED, (enemy: any) => {
-      console.log(ENEMY_SCORES[enemy.constructor.name], 'score', enemy, ENEMY_SCORES);
+      console.log(ENEMY_SCORES[enemy.constructor.name], 'score', enemy.constructor, ENEMY_SCORES, enemy.constructor.name);
       this.#score += ENEMY_SCORES[enemy.constructor.name];
       this.setText(this.#score.toString(10));
     });
