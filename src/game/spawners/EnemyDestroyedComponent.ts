@@ -2,6 +2,7 @@
 import { CUSTOM_EVENTS } from "../events/EventBusComponent";
 
 export class EnemyDestroyedComponent {
+  readonly type = "EnemyDestroyedComponent";
   #scene: any;
   #group: any;
   #eventBusComponent: any;
@@ -11,7 +12,7 @@ export class EnemyDestroyedComponent {
     this.#eventBusComponent = eventBusComponent;
 
     this.#group = this.#scene.add.group({
-      name: `${this.constructor.name}-${Phaser.Math.RND.uuid}`,
+      name: `${this.type}-${Phaser.Math.RND.uuid}`,
     });
 
     this.#eventBusComponent.on(CUSTOM_EVENTS.ENEMY_DESTROYED, (enemy: any) => {

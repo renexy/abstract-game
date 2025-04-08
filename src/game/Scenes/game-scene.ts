@@ -69,7 +69,7 @@ export class GameScene extends Phaser.Scene {
     );
 
     eventBusComponent.on(CUSTOM_EVENTS.ENEMY_INIT, (gameObject: any) => {
-      if (gameObject.constructor.name !== "FighterEnemy") {
+      if (gameObject.type !== "FighterEnemy") {
         return;
       }
 

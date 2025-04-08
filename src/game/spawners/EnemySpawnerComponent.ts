@@ -4,6 +4,7 @@ import { CUSTOM_EVENTS } from "../events/EventBusComponent";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export class EnemySpawnerComponent {
+  readonly type = "EnemySpawnerComponent";
   #scene;
   #spawnInterval;
   #spawnAt;
@@ -19,7 +20,7 @@ export class EnemySpawnerComponent {
     this.#scene = scene;
 
     this.#group = this.#scene.add.group({
-      name: `${this.constructor.name}-${Phaser.Math.RND.uuid()}`,
+      name: `${this.type}-${Phaser.Math.RND.uuid()}`,
       classType: enemyClass,
       runChildUpdate: true,
       createCallback: (enemy: any) => {

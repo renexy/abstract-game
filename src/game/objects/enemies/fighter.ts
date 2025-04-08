@@ -8,6 +8,7 @@ import { CUSTOM_EVENTS } from "../../events/EventBusComponent";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export class FighterEnemy extends Phaser.GameObjects.Container {
+  readonly type = "FighterEnemy";
   #isInitialized: boolean;
   #healthComponent: any;
   #colliderComponent: any;
