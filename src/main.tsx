@@ -3,6 +3,8 @@ import "./global.css";
 import App from "./App.tsx";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { Toaster } from "react-hot-toast";
+import { AbstractWalletProvider } from "@abstract-foundation/agw-react";
+import { abstractTestnet } from "viem/chains";
 
 const theme = createTheme({
   palette: {
@@ -17,8 +19,10 @@ const theme = createTheme({
   },
 });
 createRoot(document.getElementById("root")!).render(
-  <ThemeProvider theme={theme}>
-    <Toaster position="top-right" />
-    <App />
-  </ThemeProvider>
+  <AbstractWalletProvider chain={abstractTestnet}>
+    <ThemeProvider theme={theme}>
+      <Toaster position="top-right" />
+      <App />
+    </ThemeProvider>
+  </AbstractWalletProvider>
 );
