@@ -17,6 +17,10 @@ export class AbstractEnemyInputComponent extends InputComponent {
     this._left = true;
   }
 
+  set startX(val: any) {
+    this.#startX = val;
+  }
+
   update() {
     if (this.#gameObject.x > this.#startX + this.#maxXMovement) {
       this._left = true;

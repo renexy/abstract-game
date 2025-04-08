@@ -4,19 +4,23 @@ import { BotFighterInputComponent } from "../../input/BotFighterInputComponent";
 import { WeaponComponent } from "../../weapon/WeaponComponent";
 import { HealthComponent } from "../../health/HealthComponent";
 import { ColliderComponent } from "../../collider/ColliderComponent";
+import { CUSTOM_EVENTS } from "../../events/EventBusComponent";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export class FighterEnemy extends Phaser.GameObjects.Container {
-  #healthComponent;
-  #colliderComponent;
-  #inputComponent;
-  #weaponComponent;
+  #isInitialized: boolean;
+  #healthComponent: any;
+  #colliderComponent: any;
+  #inputComponent: any;
+  #weaponComponent: any;
+  #eventBusComponent: any;
   #abstractSprite;
-  #verticalMovementComponent;
+  #verticalMovementComponent: any;
   #penguinFireFeetSprite;
 
   constructor(scene: any, x: any, y: any) {
     super(scene, x, y, []);
+    this.#isInitialized = false;
 
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
@@ -29,25 +33,6 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
       .setFlipY(true);
     this.#penguinFireFeetSprite.play("penguin_fire_feet");
     this.add([this.#abstractSprite, this.#penguinFireFeetSprite]);
-
-    this.#inputComponent = new BotFighterInputComponent();
-    this.#verticalMovementComponent = new VerticalMovementComponent(
-      this,
-      this.#inputComponent,
-      config.ENEMY_FIGHTER_MOVEMENT_VERTICAL_VELOCITY
-    );
-
-    this.#weaponComponent = new WeaponComponent(this, this.#inputComponent, {
-      speed: config.ENEMY_FIGHTER_BULLET_SPEED,
-      lifespan: config.ENEMY_FIGHTER_BULLET_LIFESPAN,
-      flipY: true,
-      interval: config.ENEMY_FIGHTER_BULLET_INTERVAL,
-      maxCount: config.ENEMY_FIGHTER_BULLET_MAX_COUNT,
-      yOffset: 10,
-    });
-
-    this.#healthComponent = new HealthComponent(config.ENEMY_FIGHTER_HEALTH);
-    this.#colliderComponent = new ColliderComponent(this.#healthComponent);
 
     this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     this.once(
@@ -75,8 +60,40 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
     return this.#weaponComponent;
   }
 
-  update(ts: any, dt: any) {
-    console.log(ts);
+  init(eventBusComponent: any) {
+    this.#eventBusComponent = eventBusComponent;
+    this.#inputComponent = new BotFighterInputComponent();
+    this.#verticalMovementComponent = new VerticalMovementComponent(
+      this,
+      this.#inputComponent,
+      config.ENEMY_FIGHTER_MOVEMENT_VERTICAL_VELOCITY
+    );
+
+    this.#weaponComponent = new WeaponComponent(this, this.#inputComponent, {
+      speed: config.ENEMY_FIGHTER_BULLET_SPEED,
+      lifespan: config.ENEMY_FIGHTER_BULLET_LIFESPAN,
+      flipY: true,
+      interval: config.ENEMY_FIGHTER_BULLET_INTERVAL,
+      maxCount: config.ENEMY_FIGHTER_BULLET_MAX_COUNT,
+      yOffset: 10,
+    });
+
+    this.#healthComponent = new HealthComponent(config.ENEMY_FIGHTER_HEALTH);
+    this.#colliderComponent = new ColliderComponent(this.#healthComponent);
+    this.#eventBusComponent.emit(CUSTOM_EVENTS.ENEMY_INIT, this);
+    this.#isInitialized = true;
+  }
+
+  reset() {
+    this.setActive(true);
+    this.setVisible(true);
+    this.#healthComponent.reset();
+    this.#verticalMovementComponent.reset();
+  }
+
+  update(_ts: any, dt: any) {
+    if (!this.#isInitialized) return;
+
     if (!this.active) {
       return;
     }
