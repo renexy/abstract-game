@@ -1,3 +1,5 @@
+import { CUSTOM_EVENTS } from "../events/EventBusComponent";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export class WeaponComponent {
   #gameObject;
@@ -5,12 +7,14 @@ export class WeaponComponent {
   #bulletGroup;
   #fireBulletInterval;
   #bulletConfig;
+  #eventBusComponent;
 
-  constructor(gameObject: any, inputComponent: any, bulletConfig: any) {
+  constructor(gameObject: any, inputComponent: any, bulletConfig: any, eventBusComponent: any) {
     this.#gameObject = gameObject;
     this.#inputComponent = inputComponent;
     this.#bulletConfig = bulletConfig;
     this.#fireBulletInterval = 0;
+    this.#eventBusComponent = eventBusComponent;
 
     this.#bulletGroup = this.#gameObject.scene.physics.add.group({
       name: `bullet${Phaser.Math.RND.uuid()}`,
@@ -67,6 +71,7 @@ export class WeaponComponent {
       bullet.setFlipY(this.#bulletConfig.flipY);
 
       this.#fireBulletInterval = this.#bulletConfig.interval;
+      this.#eventBusComponent.emit(CUSTOM_EVENTS.SHIP_SHOOT);
     }
   }
 

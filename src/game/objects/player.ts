@@ -50,11 +50,11 @@ export class Player extends Phaser.GameObjects.Container {
         interval: config.PLAYER_BULLET_INTERVAL,
         maxCount: config.PLAYER_BULLET_MAX_COUNT,
         yOffset: -20,
-      }
+      }, this.#eventBusComponent
     );
 
     this.#healthComponent = new HealthComponent(config.PLAYER_HEALTH);
-    this.#colliderComponent = new ColliderComponent(this.#healthComponent);
+    this.#colliderComponent = new ColliderComponent(this.#healthComponent, this.#eventBusComponent);
 
     this.#hide();
 

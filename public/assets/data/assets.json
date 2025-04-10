@@ -57,6 +57,36 @@
           "frameConfig": { "frameWidth": 640, "frameHeight": 360 }
         }
       ]
+    },
+    {
+      "path": "/assets/audio/ansimuz",
+      "files": [
+        {
+          "type": "audio",
+          "key": "explosion",
+          "url": "explosion.wav"
+        },
+        {
+          "type": "audio",
+          "key": "hit",
+          "url": "hit.wav"
+        },
+        {
+          "type": "audio",
+          "key": "shot1",
+          "url": "shot_1.wav"
+        },
+        {
+          "type": "audio",
+          "key": "shot2",
+          "url": "shot_2.wav"
+        },
+        {
+          "type": "audio",
+          "key": "bg",
+          "url": "space_asteroids.wav"
+        }
+      ]
     }
   ]
   

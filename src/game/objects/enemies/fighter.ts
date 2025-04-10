@@ -85,10 +85,10 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
       interval: config.ENEMY_FIGHTER_BULLET_INTERVAL,
       maxCount: config.ENEMY_FIGHTER_BULLET_MAX_COUNT,
       yOffset: 10,
-    });
+    }, this.#eventBusComponent);
 
     this.#healthComponent = new HealthComponent(config.ENEMY_FIGHTER_HEALTH);
-    this.#colliderComponent = new ColliderComponent(this.#healthComponent);
+    this.#colliderComponent = new ColliderComponent(this.#healthComponent, this.#eventBusComponent);
     this.#eventBusComponent.emit(CUSTOM_EVENTS.ENEMY_INIT, this);
     this.#isInitialized = true;
   }

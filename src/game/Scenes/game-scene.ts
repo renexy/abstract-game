@@ -12,6 +12,7 @@ import { CUSTOM_EVENTS, EventBusComponent } from "../events/EventBusComponent";
 import { EnemyDestroyedComponent } from "../spawners/EnemyDestroyedComponent";
 import { Score } from "../objects/ui/Score";
 import { LivesComponent } from "../objects/ui/Lives";
+import { AudioManager } from "../objects/AudioManager";
 export class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: "GameScene" });
@@ -22,9 +23,27 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.sprite(0, 0, 'bg1', 0).setOrigin(0, 1).setAlpha(0.7).setAngle(90).setScale(1, 1.25).play('bg1');
-    this.add.sprite(0, 0, 'bg2', 0).setOrigin(0, 1).setAlpha(0.7).setAngle(90).setScale(1, 1.25).play('bg2');
-    this.add.sprite(0, 0, 'bg3', 0).setOrigin(0, 1).setAlpha(0.7).setAngle(90).setScale(1, 1.25).play('bg3');
+    this.add
+      .sprite(0, 0, "bg1", 0)
+      .setOrigin(0, 1)
+      .setAlpha(0.7)
+      .setAngle(90)
+      .setScale(1, 1.25)
+      .play("bg1");
+    this.add
+      .sprite(0, 0, "bg2", 0)
+      .setOrigin(0, 1)
+      .setAlpha(0.7)
+      .setAngle(90)
+      .setScale(1, 1.25)
+      .play("bg2");
+    this.add
+      .sprite(0, 0, "bg3", 0)
+      .setOrigin(0, 1)
+      .setAlpha(0.7)
+      .setAngle(90)
+      .setScale(1, 1.25)
+      .play("bg3");
     const eventBusComponent = new EventBusComponent();
     const player = new Player(this, eventBusComponent);
     const abstractSpawner = new EnemySpawnerComponent(
@@ -46,7 +65,7 @@ export class GameScene extends Phaser.Scene {
       eventBusComponent
     );
 
-    new EnemyDestroyedComponent(this, eventBusComponent)
+    new EnemyDestroyedComponent(this, eventBusComponent);
 
     this.physics.add.overlap(
       player,
@@ -106,10 +125,11 @@ export class GameScene extends Phaser.Scene {
 
     const x = new Score(this, eventBusComponent);
     new LivesComponent(this, eventBusComponent);
+    new AudioManager(this, eventBusComponent);
 
     // Listen for game over event and emit it to the game instance
     eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
-      this.game.events.emit('gameOver', x);
+      this.game.events.emit("gameOver", x);
     });
   }
 }

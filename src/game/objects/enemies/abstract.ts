@@ -78,7 +78,7 @@ export class AbstractEnemy extends Phaser.GameObjects.Container {
     );
 
     this.#healthComponent = new HealthComponent(config.ENEMY_ABSTRACT_HEALTH);
-    this.#colliderComponent = new ColliderComponent(this.#healthComponent);
+    this.#colliderComponent = new ColliderComponent(this.#healthComponent, this.#eventBusComponent);
     this.#eventBusComponent.emit(CUSTOM_EVENTS.ENEMY_INIT, this);
     this.#isInitialized = true;
   }
