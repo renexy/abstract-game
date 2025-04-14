@@ -46,8 +46,8 @@ function Scoreboard({ updateHighScore, goBack }: ScoreboardProps) {
         onClick={() => openTestnetExplorer(addressInternal)}
         className={`${
           addressInternal === address?.toLowerCase()
-            ? "text-[#764120]"
-            : "text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
+            ? "text-[#ef971f]"
+            : "text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
         }`}
       >
         {addressInternal?.substring(0, 4) +
@@ -78,7 +78,7 @@ function Scoreboard({ updateHighScore, goBack }: ScoreboardProps) {
         className="bg-[#090812] bg-opacity-95 shadow-lg p-4 rounded-lg h-[540px] gap-10
         w-[500px] relative animate-fadeInSlideUp justify-center items-center flex flex-col justify-center"
       >
-        <span className="text-white hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300 text-center">
+        <span className="text-[#5c5e6d] hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300 text-center">
           Congratulations! 🎊 <br /> Your high score was: {updateHighScore}
         </span>
         <TwitterIcon
@@ -92,7 +92,7 @@ function Scoreboard({ updateHighScore, goBack }: ScoreboardProps) {
         />
         <span
           onClick={() => setNewScoreScreen(false)}
-          className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
+          className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
         >
           Continue to leaderboard
         </span>
@@ -105,7 +105,7 @@ function Scoreboard({ updateHighScore, goBack }: ScoreboardProps) {
       className="bg-[#090812] bg-opacity-95 shadow-lg p-4 rounded-lg h-[540px] gap-10
     w-[500px] relative animate-fadeInSlideUp justify-center items-center flex flex-col justify-center"
     >
-      <span className="text-white hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300">
+      <span className="text-[#5c5e6d] hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300">
         Leaderboard
       </span>
       <div className="flex w-full overflow-y-auto flex flex-col gap-[8px]">
@@ -115,10 +115,10 @@ function Scoreboard({ updateHighScore, goBack }: ScoreboardProps) {
               className="flex w-full justify-between items-center px-[4px]"
               key={index}
             >
-              <span className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300">
+              <span className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300">
                 {getWalletInfo(item.wa)}
               </span>
-              <span className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300">
+              <span className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300">
                 {item.score}
               </span>
             </div>
@@ -128,7 +128,7 @@ function Scoreboard({ updateHighScore, goBack }: ScoreboardProps) {
 
       <span
         onClick={goBack}
-        className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
+        className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
       >
         Back
       </span>

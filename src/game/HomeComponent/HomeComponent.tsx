@@ -3,19 +3,28 @@ import { GameScene } from "../Scenes/game-scene";
 import { BootScene } from "../Scenes/boot-scene";
 import { useRef, useState } from "react";
 import { PreloadScene } from "../Scenes/preload-scene";
-import { useAbstractClient, useLoginWithAbstract } from "@abstract-foundation/agw-react";
+import {
+  useAbstractClient,
+  useLoginWithAbstract,
+} from "@abstract-foundation/agw-react";
 import { useAccount } from "wagmi";
 import { CircularProgress } from "@mui/material";
 import Scoreboard from "../../components/Scoreboard";
 import toast from "react-hot-toast";
-import WriteContract from "../../services/web3/interactions";
+import {
+  depositTokens,
+  depositTokenstest,
+} from "../../services/web3/interactions";
+import logo from "../../assets/logo.png";
+import abstract from "../../assets/abstract.png";
 
 const Home = () => {
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [updateHighScore, setUpdateHighScore] = useState<string>("");
   const [showScoreboard, setShowScoreboard] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const gameRef = useRef<Phaser.Game | null>(null);
-  const { address, isConnected, isConnecting} = useAccount();
+  const { address, isConnected, isConnecting } = useAccount();
   const { data: agwClient } = useAbstractClient();
   const { login, logout } = useLoginWithAbstract();
 
@@ -57,6 +66,7 @@ const Home = () => {
     // Listen for game over event
     gameRef.current.events.on("gameOver", (data: any) => {
       console.log("Game over event received in HomeComponent", data);
+      localStorage.removeItem("player-lives-noot");
       setGameStarted(false);
       if (gameRef.current) {
         gameRef.current.destroy(true);
@@ -71,7 +81,7 @@ const Home = () => {
     if (!isConnected)
       return (
         <span
-          className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
+          className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
           onClick={login}
         >
           Connect Wallet
@@ -79,7 +89,7 @@ const Home = () => {
       );
 
     return (
-      <span className="text-white">
+      <span className="text-[#5c5e6d]">
         {address?.substring(0, 4) +
           "..." +
           address?.substring(address.length - 4)}
@@ -87,14 +97,16 @@ const Home = () => {
     );
   };
 
-  const deleteThis = async() => {
-    console.log(agwClient, 'lol')
-    console.log(address)
-    // const result = await WriteContract(agwClient)
-    await WriteContract(agwClient);
-  }
+  const deleteThis = async () => {
+    setLoading(true);
+    await depositTokens(agwClient!);
+    await new Promise((res) => setTimeout(res, 3000));
+    await depositTokenstest(agwClient!);
+    window.localStorage.setItem("player-lives-noot", "3");
+    setLoading(false);
+  };
 
-  if (isConnecting) {
+  if (isConnecting || loading) {
     return (
       <div
         className="bg-[#090812] bg-opacity-95 shadow-lg p-4 rounded-lg h-[540px] gap-10
@@ -122,14 +134,24 @@ const Home = () => {
       {gameStarted && <div id="game-container"></div>}
       {!gameStarted && (
         <div
-          className="bg-[#090812] bg-opacity-95 shadow-lg p-4 rounded-lg h-[540px] gap-10
+          className="bg-[#090812] bg-opacity-95 shadow-lg p-4 rounded-lg h-[540px] gap-8
   w-[500px] relative animate-fadeInSlideUp justify-center items-center flex flex-col justify-center"
         >
+          <div className="flex flex-col gap-[6px] justify-center items-center">
+            <img src={logo} height={40} width={40} />
+            <span className="text-[#5c5e6d] text-[24px] hover:shadow-[#ef971f] transition-all duration-300">
+              <span className="text-[#f62c25]">Noot</span> Shooter
+            </span>
+            <span className="text-[#5c5e6d] text-[20px] w-full flex justify-evenly items-center">
+              Powered by <img src={abstract} height={32} width={32} />
+            </span>
+          </div>
+
           <span
             className={
               !isConnected && !gameStarted
                 ? "text-[#4A5659]"
-                : "text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
+                : "text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
             }
             onClick={() => {
               if (!isConnected) {
@@ -144,19 +166,19 @@ const Home = () => {
           {getWalletInfo()}
           <span
             onClick={() => setShowScoreboard(true)}
-            className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
+            className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
           >
             Leaderboard
           </span>
-          <span className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300">
-            Buy upgrades
-          </span>
-          <span className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300" onClick={deleteThis}>
-            delete
+          <span
+            className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
+            onClick={deleteThis}
+          >
+            Buy extra life
           </span>
           {address && (
             <span
-              className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
+              className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
               onClick={logout}
             >
               Disconnect Wallet

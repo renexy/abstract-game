@@ -9,7 +9,14 @@ export class LivesComponent extends Phaser.GameObjects.Container {
   constructor(scene: any, eventBusComponent: any) {
     super(scene, 5, scene.scale.height - 30, []);
     this.#eventBusComponent = eventBusComponent;
-    this.#lives = config.PLAYER_LIVES;
+
+    let playerLives = config.PLAYER_LIVES;
+    const extraLife = window.localStorage.getItem('player-lives-noot')
+    if (extraLife) {
+      playerLives = parseFloat(window.localStorage.getItem('player-lives-noot')!);
+    }
+
+    this.#lives = playerLives;
     this.scene.add.existing(this);
 
     for (let i = 0; i < this.#lives; i += 1) {

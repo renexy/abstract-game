@@ -1,5 +1,5 @@
 export const PLAYER_HEALTH = 4;
-export const PLAYER_LIVES = 3;
+export const PLAYER_LIVES = 2;
 
 export const PLAYER_MOVEMENT_HORIZONTAL_VELOCITY = 20;
 export const PLAYER_BULLET_MAX_COUNT = 10;
