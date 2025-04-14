@@ -3,19 +3,21 @@ import { GameScene } from "../Scenes/game-scene";
 import { BootScene } from "../Scenes/boot-scene";
 import { useRef, useState } from "react";
 import { PreloadScene } from "../Scenes/preload-scene";
-import { useLoginWithAbstract } from "@abstract-foundation/agw-react";
+import { useAbstractClient, useLoginWithAbstract } from "@abstract-foundation/agw-react";
 import { useAccount } from "wagmi";
 import { CircularProgress } from "@mui/material";
 import Scoreboard from "../../components/Scoreboard";
 import toast from "react-hot-toast";
+import WriteContract from "../../services/web3/interactions";
 
 const Home = () => {
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [updateHighScore, setUpdateHighScore] = useState<string>("");
   const [showScoreboard, setShowScoreboard] = useState<boolean>(false);
   const gameRef = useRef<Phaser.Game | null>(null);
-  const { address, isConnected, isConnecting } = useAccount();
-  const { login } = useLoginWithAbstract();
+  const { address, isConnected, isConnecting} = useAccount();
+  const { data: agwClient } = useAbstractClient();
+  const { login, logout } = useLoginWithAbstract();
 
   const startGame = () => {
     // If there's an existing game, destroy it first
@@ -85,6 +87,13 @@ const Home = () => {
     );
   };
 
+  const deleteThis = async() => {
+    console.log(agwClient, 'lol')
+    console.log(address)
+    // const result = await WriteContract(agwClient)
+    await WriteContract(agwClient);
+  }
+
   if (isConnecting) {
     return (
       <div
@@ -142,6 +151,17 @@ const Home = () => {
           <span className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300">
             Buy upgrades
           </span>
+          <span className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300" onClick={deleteThis}>
+            delete
+          </span>
+          {address && (
+            <span
+              className="text-white cursor-pointer hover:text-[#764120] hover:shadow-[#764120] transition-all duration-300"
+              onClick={logout}
+            >
+              Disconnect Wallet
+            </span>
+          )}
         </div>
       )}
     </>
