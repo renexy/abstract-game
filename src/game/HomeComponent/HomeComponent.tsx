@@ -170,12 +170,14 @@ const Home = () => {
           >
             Leaderboard
           </span>
-          <span
-            className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
-            onClick={deleteThis}
-          >
-            Buy extra life
-          </span>
+          {address && (
+            <span
+              className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
+              onClick={deleteThis}
+            >
+              Buy extra life
+            </span>
+          )}
           {address && (
             <span
               className="text-[#5c5e6d] cursor-pointer hover:text-[#ef971f] hover:shadow-[#ef971f] transition-all duration-300"
